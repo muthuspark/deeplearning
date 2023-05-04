@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>deeplearning - Human like Text generator</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">deeplearning</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sine_wave_function.html">Basics</a></li><li class="breadcrumb-item"><a href="./create_text.html">Human like Text generator</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sine_wave_function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sin wave function using Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linear_equation_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear equation y = 2x + 1 using Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mnist_digit_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Handwritten digit classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./create_text.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Human like Text generator</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./semantic_similarity_bert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Grouping together similar news articles based on their titles</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#visualize-and-clean-data" id="toc-visualize-and-clean-data" class="nav-link active" data-scroll-target="#visualize-and-clean-data">Visualize and clean data</a>
+  <ul class="collapse">
+  <li><a href="#remove-special-characters-punctuation-and-numbers." id="toc-remove-special-characters-punctuation-and-numbers." class="nav-link" data-scroll-target="#remove-special-characters-punctuation-and-numbers.">Remove special characters, punctuation, and numbers.</a></li>
+  </ul></li>
+  <li><a href="#prepare-data-for-training" id="toc-prepare-data-for-training" class="nav-link" data-scroll-target="#prepare-data-for-training">Prepare Data for training</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Human like Text generator</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the dataset and visualize it</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">'datasets/amazon_reviews.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="visualize-and-clean-data" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-and-clean-data">Visualize and clean data</h2>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">review</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>It's hard to believe "Memory of Trees" came ou...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A clasically-styled and introverted album, Mem...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>I never thought Enya would reach the sublime h...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>This is the third review of an irish album I w...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Enya, despite being a successful recording art...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">64700</td>
+<td>I like the reggae sound a lot in this song. I ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">64701</td>
+<td>I first heard this on Sirius and had to have i...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">64702</td>
+<td>I absolutely love this song, it downloaded fin...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">64703</td>
+<td>Reggae, island beats aren't really my cup of t...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">64704</td>
+<td>Magic! is a Canadian band that incorporates re...</td>
+</tr>
+</tbody>
+</table>
+
+<p>64705 rows × 1 columns</p>
+</div>
+</div>
+</div>
+<section id="remove-special-characters-punctuation-and-numbers." class="level3">
+<h3 class="anchored" data-anchor-id="remove-special-characters-punctuation-and-numbers.">Remove special characters, punctuation, and numbers.</h3>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> preprocess(text):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    text_input <span class="op">=</span> re.sub(<span class="st">'[^a-zA-Z1-9]+'</span>, <span class="st">' '</span>, <span class="bu">str</span>(text))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> re.sub(<span class="vs">r'\d+'</span>, <span class="st">''</span>,text_input)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> output.lower().strip()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> data[<span class="st">'review'</span>].<span class="bu">map</span>(preprocess).astype(<span class="bu">str</span>).values[:<span class="dv">100</span>].tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>corpus[<span class="dv">0</span>:<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>['it s hard to believe memory of trees came out  years ago it has held up well over the passage of time it s enya s last great album before the new age pop of amarantine and day without rain back in  enya still had her creative spark her own voice i agree with the reviewer who said that this is her saddest album it is melancholy bittersweet from the opening title song memory of trees is elegaic majestic pax deorum sounds like it is from a requiem mass it is a dark threnody unlike the reviewer who said that this has a disconcerting blend of spirituality sensuality i don t find it disconcerting at all anywhere is is a hopeful song looking to possibilities hope has a place is about love but it is up to the listener to decide if it is romantic platonic etc i ve always had a soft spot for this song on my way home is a triumphant ending about return this is truly a masterpiece of new age music a must for any enya fan',
+ 'a clasically styled and introverted album memory of trees is a masterpiece of subtlety many of the songs have an endearing shyness to them soft piano and a lovely quiet voice but within every introvert is an inferno and enya lets that fire explode on a couple of songs that absolutely burst with an expected raw power if you ve never heard enya before you might want to start with one of her more popularized works like watermark just to play it safe but if you re already a fan then your collection is not complete without this beautiful work of musical art']</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="prepare-data-for-training" class="level2">
+<h2 class="anchored" data-anchor-id="prepare-data-for-training">Prepare Data for training</h2>
+<p>The <code>fit_on_texts()</code> method in the Keras Tokenizer class updates the tokenizer’s internal vocabulary based on a list of texts . It creates a dictionary where the keys are the unique words in the text list, and the values are the counts of each word in the text. This dictionary is used to create an index-based mapping of words to integers, where the most common words have the lowest integer values.</p>
+<p>The method’s signature is as follows:</p>
+<p><code>fit_on_texts(texts)</code></p>
+<p>where texts is a list of strings representing the input texts to be processed. The method updates the internal vocabulary based on the words in the input texts.</p>
+<p>The <code>fit_on_texts()</code> method is typically used as a preprocessing step before transforming text data into numerical sequences using the <code>texts_to_sequences()</code> method. By learning the vocabulary from the input texts, the tokenizer is able to assign integer indices to each word that can be used to represent the texts as sequences of integers.</p>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.preprocessing.text <span class="im">import</span> Tokenizer</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> Tokenizer()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>tokenizer.fit_on_texts(corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the indexes</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>tokenizer.word_index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>{'the': 1,
+ 'and': 2,
+ 'of': 3,
+ 'a': 4,
+ 'is': 5,
+ 'to': 6,
+ 'i': 7,
+ 'this': 8,
+ 'it': 9,
+ 'in': 10,
+ 's': 11,
+ 'that': 12,
+ 'quot': 13,
+ 'album': 14,
+ 'with': 15,
+ 'you': 16,
+ 'on': 17,
+ 'for': 18,
+ 'as': 19,
+ 'song': 20,
+ 'was': 21,
+ 'one': 22,
+ 'but': 23,
+ 'my': 24,
+ 'all': 25,
+ 'are': 26,
+ 't': 27,
+ 'not': 28,
+ 'songs': 29,
+ 'like': 30,
+ 'cars': 31,
+ 'be': 32,
+ 'enya': 33,
+ 'just': 34,
+ 'an': 35,
+ 'her': 36,
+ 'there': 37,
+ 'music': 38,
+ 'from': 39,
+ 'have': 40,
+ 'best': 41,
+ 'good': 42,
+ 'new': 43,
+ 'has': 44,
+ 'what': 45,
+ 'their': 46,
+ 'up': 47,
+ 'more': 48,
+ 'great': 49,
+ 'rock': 50,
+ 'very': 51,
+ 'by': 52,
+ 'track': 53,
+ 'out': 54,
+ 'they': 55,
+ 'time': 56,
+ 'at': 57,
+ 'sound': 58,
+ 'had': 59,
+ 'me': 60,
+ 'only': 61,
+ 'band': 62,
+ 'most': 63,
+ 'which': 64,
+ 'or': 65,
+ 'were': 66,
+ 'so': 67,
+ 'love': 68,
+ 'cd': 69,
+ 'about': 70,
+ 'can': 71,
+ 'first': 72,
+ 'debut': 73,
+ 'well': 74,
+ 'if': 75,
+ 'some': 76,
+ 'sounds': 77,
+ 'times': 78,
+ 'still': 79,
+ 'vocals': 80,
+ 'many': 81,
+ 'than': 82,
+ 'even': 83,
+ 'your': 84,
+ 'lyrics': 85,
+ 'wave': 86,
+ 're': 87,
+ 'albums': 88,
+ 'needed': 89,
+ 'memory': 90,
+ 'another': 91,
+ 'trees': 92,
+ 'pop': 93,
+ 'way': 94,
+ 'then': 95,
+ 'no': 96,
+ 'would': 97,
+ 'get': 98,
+ 'here': 99,
+ 'when': 100,
+ 'beautiful': 101,
+ 'ever': 102,
+ 'instrumental': 103,
+ 'roll': 104,
+ 'ric': 105,
+ 've': 106,
+ 'much': 107,
+ 'got': 108,
+ 'years': 109,
+ 'don': 110,
+ 'work': 111,
+ 'classic': 112,
+ 'voice': 113,
+ 'she': 114,
+ 'where': 115,
+ 'into': 116,
+ 'he': 117,
+ 'girl': 118,
+ 'tracks': 119,
+ 'made': 120,
+ 'these': 121,
+ 'also': 122,
+ 'its': 123,
+ 'other': 124,
+ 'could': 125,
+ 'we': 126,
+ 'know': 127,
+ 'bye': 128,
+ 'stereo': 129,
+ 'who': 130,
+ 'never': 131,
+ 'm': 132,
+ 'will': 133,
+ 'released': 134,
+ 'his': 135,
+ 'been': 136,
+ 'moving': 137,
+ 'came': 138,
+ 'day': 139,
+ 'them': 140,
+ 'world': 141,
+ 'hits': 142,
+ 'how': 143,
+ 'friend': 144,
+ 'ocasek': 145,
+ 'over': 146,
+ 'think': 147,
+ 'listen': 148,
+ 'any': 149,
+ 'something': 150,
+ 'being': 151,
+ 'after': 152,
+ 'really': 153,
+ 'around': 154,
+ 'radio': 155,
+ 'orr': 156,
+ 'boys': 157,
+ 'beach': 158,
+ 'brian': 159,
+ 'home': 160,
+ 'piano': 161,
+ 'such': 162,
+ 'place': 163,
+ 'did': 164,
+ 'too': 165,
+ 'top': 166,
+ 'sung': 167,
+ 'am': 168,
+ 'because': 169,
+ 'may': 170,
+ 'few': 171,
+ 'greatest': 172,
+ 'r': 173,
+ 'b': 174,
+ 'anywhere': 175,
+ 'hope': 176,
+ 'always': 177,
+ 'now': 178,
+ 'say': 179,
+ 'nice': 180,
+ 'again': 181,
+ 'two': 182,
+ 'tonight': 183,
+ 'wilson': 184,
+ 'pet': 185,
+ 'hard': 186,
+ 'without': 187,
+ 'those': 188,
+ 'while': 189,
+ 'singing': 190,
+ 'roses': 191,
+ 'although': 192,
+ 'make': 193,
+ 'off': 194,
+ 'hit': 195,
+ 'title': 196,
+ 'people': 197,
+ 'since': 198,
+ 'go': 199,
+ 'hear': 200,
+ 'china': 201,
+ 'once': 202,
+ 'keyboard': 203,
+ 'record': 204,
+ 'mixed': 205,
+ 'every': 206,
+ 'almost': 207,
+ 'release': 208,
+ 'heard': 209,
+ 'musical': 210,
+ 'both': 211,
+ 'favorite': 212,
+ 'single': 213,
+ 'later': 214,
+ 'better': 215,
+ 'set': 216,
+ 'however': 217,
+ 'lot': 218,
+ 'lead': 219,
+ 'right': 220,
+ 'stroke': 221,
+ 'guitar': 222,
+ 'already': 223,
+ 'vocal': 224,
+ 'comes': 225,
+ 'quality': 226,
+ 'gold': 227,
+ 'feel': 228,
+ 'though': 229,
+ 'three': 230,
+ 'each': 231,
+ 'excellent': 232,
+ 'late': 233,
+ 'stop': 234,
+ 'before': 235,
+ 'opening': 236,
+ 'pax': 237,
+ 'deorum': 238,
+ 'find': 239,
+ 'today': 240,
+ 'does': 241,
+ 'do': 242,
+ 'moon': 243,
+ 'bit': 244,
+ 'tempo': 245,
+ 'us': 246,
+ 'production': 247,
+ 'yet': 248,
+ 'god': 249,
+ 'fun': 250,
+ 'singles': 251,
+ 'became': 252,
+ 'disc': 253,
+ 'touch': 254,
+ 'ben': 255,
+ 'boston': 256,
+ 'wasn': 257,
+ 'rain': 258,
+ 'must': 259,
+ 'might': 260,
+ 'want': 261,
+ 'watermark': 262,
+ 'let': 263,
+ 'buy': 264,
+ 'along': 265,
+ 'athair': 266,
+ 'knows': 267,
+ 'line': 268,
+ 'things': 269,
+ 'seems': 270,
+ 'through': 271,
+ 'course': 272,
+ 'changing': 273,
+ 'faces': 274,
+ 'john': 275,
+ 'age': 276,
+ 'dark': 277,
+ 'collection': 278,
+ 'actually': 279,
+ 'records': 280,
+ 'chorus': 281,
+ 'perfect': 282,
+ 'latin': 283,
+ 'ar': 284,
+ 'catchy': 285,
+ 'part': 286,
+ 'big': 287,
+ 'why': 288,
+ 'life': 289,
+ 'come': 290,
+ 'major': 291,
+ 'soul': 292,
+ 'fans': 293,
+ 'rest': 294,
+ 'accompaniment': 295,
+ 'wouldn': 296,
+ 'fresh': 297,
+ 'beatles': 298,
+ 'last': 299,
+ 'back': 300,
+ 'truly': 301,
+ 'fan': 302,
+ 'didn': 303,
+ 'reason': 304,
+ 'put': 305,
+ 'probably': 306,
+ 'd': 307,
+ 'la': 308,
+ 'whole': 309,
+ 'little': 310,
+ 'give': 311,
+ 'gaelic': 312,
+ 'see': 313,
+ 'remember': 314,
+ 'second': 315,
+ 'high': 316,
+ 'groups': 317,
+ 'next': 318,
+ 'old': 319,
+ 'version': 320,
+ 'foolin': 321,
+ 'kelly': 322,
+ 'enough': 323,
+ 'bands': 324,
+ 'cool': 325,
+ 'elliot': 326,
+ 'easton': 327,
+ 'cha': 328,
+ 'hawkes': 329,
+ 'used': 330,
+ 'own': 331,
+ 'play': 332,
+ 'artist': 333,
+ 'gorgeous': 334,
+ 'ballad': 335,
+ 'house': 336,
+ 'down': 337,
+ 'neamh': 338,
+ 'become': 339,
+ 'days': 340,
+ 'popular': 341,
+ 'close': 342,
+ 'voices': 343,
+ 'ethereal': 344,
+ 'head': 345,
+ 'written': 346,
+ 'feeling': 347,
+ 'simple': 348,
+ 'went': 349,
+ 'o': 350,
+ 'guitarist': 351,
+ 'year': 352,
+ 'greg': 353,
+ 'sloop': 354,
+ 'caroline': 355,
+ 'believe': 356,
+ 'said': 357,
+ 'masterpiece': 358,
+ 'couple': 359,
+ 'makes': 360,
+ 'others': 361,
+ 'sure': 362,
+ 'despite': 363,
+ 'upbeat': 364,
+ 'hooks': 365,
+ 'piece': 366,
+ 'rather': 367,
+ 'fast': 368,
+ 'background': 369,
+ 'tea': 370,
+ 'different': 371,
+ 'same': 372,
+ 'sonadora': 373,
+ 'point': 374,
+ 'strings': 375,
+ 'between': 376,
+ 'should': 377,
+ 'stars': 378,
+ 'opinion': 379,
+ 'long': 380,
+ 'quite': 381,
+ 'note': 382,
+ 'mind': 383,
+ 'keep': 384,
+ 'known': 385,
+ 'delicate': 386,
+ 'melody': 387,
+ 'pretty': 388,
+ 'anything': 389,
+ 'created': 390,
+ 'self': 391,
+ 'baby': 392,
+ 'scene': 393,
+ 'solid': 394,
+ 'edge': 395,
+ 'away': 396,
+ 'candy': 397,
+ 'queen': 398,
+ 'original': 399,
+ 'half': 400,
+ 'sgt': 401,
+ 'listened': 402,
+ 'artists': 403,
+ 'kind': 404,
+ 'melodies': 405,
+ 'harmonies': 406,
+ 'percussion': 407,
+ 'sing': 408,
+ 'until': 409,
+ 'similar': 410,
+ 'memorable': 411,
+ 'night': 412,
+ 'spanish': 413,
+ 'synth': 414,
+ 'flow': 415,
+ 'listening': 416,
+ 'haunting': 417,
+ 'wall': 418,
+ 'end': 419,
+ 'full': 420,
+ 'look': 421,
+ 'take': 422,
+ 'consider': 423,
+ 'electronic': 424,
+ 'playing': 425,
+ 'true': 426,
+ 'enyas': 427,
+ 'heaven': 428,
+ 'particularly': 429,
+ 'bought': 430,
+ 'shows': 431,
+ 'gone': 432,
+ 'seem': 433,
+ 'understand': 434,
+ 'style': 435,
+ 'need': 436,
+ 'yes': 437,
+ 'slow': 438,
+ 'thing': 439,
+ 'sounding': 440,
+ 'keyboards': 441,
+ 'player': 442,
+ 'titled': 443,
+ 'produced': 444,
+ 'man': 445,
+ 'entire': 446,
+ 'among': 447,
+ 'punk': 448,
+ 'classics': 449,
+ 'list': 450,
+ 'benjamin': 451,
+ 'david': 452,
+ 'remastered': 453,
+ 'listener': 454,
+ 'etc': 455,
+ 'soft': 456,
+ 'quiet': 457,
+ 'power': 458,
+ 'thought': 459,
+ 'shepherd': 460,
+ 'celts': 461,
+ 'less': 462,
+ 'special': 463,
+ 'review': 464,
+ 'easy': 465,
+ 'doesn': 466,
+ 'tunes': 467,
+ 'except': 468,
+ 'use': 469,
+ 'ominous': 470,
+ 'key': 471,
+ 'instruments': 472,
+ 'mainly': 473,
+ 'synths': 474,
+ 'orinoco': 475,
+ 'reminds': 476,
+ 'sets': 477,
+ 'melodic': 478,
+ 'create': 479,
+ 'dreams': 480,
+ 'dream': 481,
+ 'whether': 482,
+ 'type': 483,
+ 'll': 484,
+ 'creating': 485,
+ 'certain': 486,
+ 'often': 487,
+ 'unique': 488,
+ 'real': 489,
+ 'singers': 490,
+ 'date': 491,
+ 'cloudy': 492,
+ 'red': 493,
+ 'darker': 494,
+ 'followed': 495,
+ 'instead': 496,
+ 'minor': 497,
+ 'features': 498,
+ 'call': 499,
+ 'stunning': 500,
+ 'huge': 501,
+ 'certainly': 502,
+ 'wonderful': 503,
+ 'simply': 504,
+ 'words': 505,
+ 'previous': 506,
+ 'young': 507,
+ 'our': 508,
+ 'during': 509,
+ 'else': 510,
+ 'form': 511,
+ 'sweet': 512,
+ 'school': 513,
+ 'sings': 514,
+ 'making': 515,
+ 'emotional': 516,
+ 'group': 517,
+ 'tape': 518,
+ 'heartbeat': 519,
+ 'city': 520,
+ 'robinson': 521,
+ 'yourself': 522,
+ 'reviewer': 523,
+ 'romantic': 524,
+ 'start': 525,
+ 'works': 526,
+ 'complete': 527,
+ 'moons': 528,
+ 'pleasant': 529,
+ 'third': 530,
+ 'write': 531,
+ 'open': 532,
+ 'staccato': 533,
+ 'under': 534,
+ 'slightly': 535,
+ 'based': 536,
+ 'everything': 537,
+ 'either': 538,
+ 'organ': 539,
+ 'arrangements': 540,
+ 'saw': 541,
+ 'finally': 542,
+ 'usual': 543,
+ 'drums': 544,
+ 'sad': 545,
+ 'poetic': 546,
+ 'following': 547,
+ 'wonder': 548,
+ 'heart': 549,
+ 'post': 550,
+ 'sense': 551,
+ 'wrong': 552,
+ 'gave': 553,
+ 'thoughts': 554,
+ 'tell': 555,
+ 'include': 556,
+ 'fall': 557,
+ 'read': 558,
+ 'reviews': 559,
+ 'five': 560,
+ 'listeners': 561,
+ 'beauty': 562,
+ 'perhaps': 563,
+ 'angelic': 564,
+ 'short': 565,
+ 'material': 566,
+ 'enjoy': 567,
+ 'sun': 568,
+ 'rhythm': 569,
+ 'side': 570,
+ 'theme': 571,
+ 'images': 572,
+ 'past': 573,
+ 'decade': 574,
+ 'strong': 575,
+ 'job': 576,
+ 'producer': 577,
+ 'clearly': 578,
+ 'modern': 579,
+ 'crafted': 580,
+ 'nearly': 581,
+ 'number': 582,
+ 'latter': 583,
+ 'together': 584,
+ 'bad': 585,
+ 'waltz': 586,
+ 'notes': 587,
+ 'beat': 588,
+ 'solo': 589,
+ 'nothing': 590,
+ 'turned': 591,
+ 'seemed': 592,
+ 'ballads': 593,
+ 'everybody': 594,
+ 'magical': 595,
+ 'experience': 596,
+ 'least': 597,
+ 'rolling': 598,
+ 'beautifully': 599,
+ 'car': 600,
+ 'sort': 601,
+ 'success': 602,
+ 'due': 603,
+ 'coming': 604,
+ 'example': 605,
+ 'friends': 606,
+ 'far': 607,
+ 'realize': 608,
+ 'history': 609,
+ 'fact': 610,
+ 'early': 611,
+ 'remains': 612,
+ 'singer': 613,
+ 'earlier': 614,
+ 'quirky': 615,
+ 'killer': 616,
+ 'test': 617,
+ 'legendary': 618,
+ 'deluxe': 619,
+ 'recommended': 620,
+ 'songwriter': 621,
+ 'anyone': 622,
+ 'felt': 623,
+ 'talk': 624,
+ 'hang': 625,
+ 'answer': 626,
+ 'pepper': 627,
+ 'ago': 628,
+ 'blend': 629,
+ 'looking': 630,
+ 'absolutely': 631,
+ 'throughout': 632,
+ 'musically': 633,
+ 'beyond': 634,
+ 'irish': 635,
+ 'wanted': 636,
+ 'relaxing': 637,
+ 'successful': 638,
+ 'recording': 639,
+ 'lively': 640,
+ 'gentle': 641,
+ 'sparse': 642,
+ 'minutes': 643,
+ 'low': 644,
+ 'nd': 645,
+ 'highlights': 646,
+ 'complex': 647,
+ 'mention': 648,
+ 'mood': 649,
+ 'familiar': 650,
+ 'getting': 651,
+ 'final': 652,
+ 'problem': 653,
+ 'reminiscent': 654,
+ 'closer': 655,
+ 'especially': 656,
+ 'gets': 657,
+ 'usually': 658,
+ 'worth': 659,
+ 'instrumentals': 660,
+ 'having': 661,
+ 'backing': 662,
+ 'beginning': 663,
+ 'isn': 664,
+ 'begins': 665,
+ 'tune': 666,
+ 'yearning': 667,
+ 'image': 668,
+ 'follow': 669,
+ 'dreamy': 670,
+ 'compared': 671,
+ 'repeated': 672,
+ 'ryan': 673,
+ 'white': 674,
+ 'filled': 675,
+ 'alternative': 676,
+ 'market': 677,
+ 'pace': 678,
+ 'placed': 679,
+ 'asleep': 680,
+ 'breaking': 681,
+ 'evening': 682,
+ 'leaves': 683,
+ 'several': 684,
+ 'stormy': 685,
+ 'combined': 686,
+ 'middle': 687,
+ 'lonely': 688,
+ 'goes': 689,
+ 'lovers': 690,
+ 'falling': 691,
+ 'class': 692,
+ 'amazing': 693,
+ 'label': 694,
+ 'star': 695,
+ 'missed': 696,
+ 'paint': 697,
+ 'sky': 698,
+ 'tone': 699,
+ 'layered': 700,
+ 'missing': 701,
+ 'try': 702,
+ 'airy': 703,
+ 'mental': 704,
+ 'typical': 705,
+ 'case': 706,
+ 'typically': 707,
+ 'translates': 708,
+ 'former': 709,
+ 'verses': 710,
+ 'wrote': 711,
+ 'flavor': 712,
+ 'changes': 713,
+ 'indeed': 714,
+ 'composed': 715,
+ 'mainstream': 716,
+ 'fitting': 717,
+ 'e': 718,
+ 'popularity': 719,
+ 'th': 720,
+ 'plastic': 721,
+ 'whenever': 722,
+ 'behind': 723,
+ 'totally': 724,
+ 'started': 725,
+ 'influence': 726,
+ 'highlight': 727,
+ 'sales': 728,
+ 'turn': 729,
+ 'going': 730,
+ 'cassette': 731,
+ 'sounded': 732,
+ 'studio': 733,
+ 'stones': 734,
+ 'lady': 735,
+ 'yeah': 736,
+ 'deserved': 737,
+ 'plays': 738,
+ 'ridgemont': 739,
+ 'highly': 740,
+ 'originally': 741,
+ 'rare': 742,
+ 'filler': 743,
+ 'picture': 744,
+ 'choice': 745,
+ 'copies': 746,
+ 'roy': 747,
+ 'thomas': 748,
+ 'baker': 749,
+ 'disco': 750,
+ 'edition': 751,
+ 'incredibly': 752,
+ 'sold': 753,
+ 'bassist': 754,
+ 'influenced': 755,
+ 'roxy': 756,
+ 'driving': 757,
+ 'experienced': 758,
+ 'elektra': 759,
+ 'air': 760,
+ 'guitars': 761,
+ 'rockers': 762,
+ 'called': 763,
+ 'american': 764,
+ 'staple': 765,
+ 'moment': 766,
+ 'level': 767,
+ 'genius': 768,
+ 'ego': 769,
+ 'peppers': 770,
+ 'surf': 771,
+ 'capitol': 772,
+ 'booklet': 773,
+ 'agree': 774,
+ 'ending': 775,
+ 'within': 776,
+ 'fire': 777,
+ 'raw': 778,
+ 'art': 779,
+ 'commercial': 780,
+ 'girls': 781,
+ 'okay': 782,
+ 'appeal': 783,
+ 'station': 784,
+ 'friendly': 785,
+ 'consistent': 786,
+ 'plus': 787,
+ 'wordless': 788,
+ 'awhile': 789,
+ 'territories': 790,
+ 'video': 791,
+ 'gives': 792,
+ 'bridge': 793,
+ 'itself': 794,
+ 'instrumentation': 795,
+ 'career': 796,
+ 'oriental': 797,
+ 'considered': 798,
+ 'woman': 799,
+ 'whose': 800,
+ 'interesting': 801,
+ 'finding': 802,
+ 'bass': 803,
+ 'instrument': 804,
+ 'favourite': 805,
+ 'enchanting': 806,
+ 'ok': 807,
+ 'free': 808,
+ 'interlude': 809,
+ 'check': 810,
+ 'mentioned': 811,
+ 'atmospheric': 812,
+ 'dreamlike': 813,
+ 'clouds': 814,
+ 'compositions': 815,
+ 'subtle': 816,
+ 'celtic': 817,
+ 'lush': 818,
+ 'arrangement': 819,
+ 'matter': 820,
+ 'current': 821,
+ 'genre': 822,
+ 'rich': 823,
+ 'demo': 824,
+ 'nine': 825,
+ 'doubt': 826,
+ 'sunniness': 827,
+ 'generally': 828,
+ 'bright': 829,
+ 'creepy': 830,
+ 'brighter': 831,
+ 'introduced': 832,
+ 'starts': 833,
+ 'becomes': 834,
+ 'giving': 835,
+ 'summer': 836,
+ 'ends': 837,
+ 'brings': 838,
+ 'favorites': 839,
+ 'sleep': 840,
+ 'fell': 841,
+ 'spooky': 842,
+ 'chants': 843,
+ 'closing': 844,
+ 'contains': 845,
+ 'recommend': 846,
+ 'genuine': 847,
+ 'writing': 848,
+ 'apart': 849,
+ 'ridiculous': 850,
+ 'entirely': 851,
+ 'al': 852,
+ 'balance': 853,
+ 'amazon': 854,
+ 'potential': 855,
+ 'recently': 856,
+ 'combination': 857,
+ 'twenty': 858,
+ 'ways': 859,
+ 'clear': 860,
+ 'choices': 861,
+ 'leaf': 862,
+ 'soothing': 863,
+ 'easily': 864,
+ 'stands': 865,
+ 'dated': 866,
+ 'definitely': 867,
+ 'smooth': 868,
+ 'says': 869,
+ 'boring': 870,
+ 'feels': 871,
+ 'vaguely': 872,
+ 'meaning': 873,
+ 'compete': 874,
+ 'mostly': 875,
+ 'somewhat': 876,
+ 'appears': 877,
+ 'otherwise': 878,
+ 'appeared': 879,
+ 'allows': 880,
+ 'universe': 881,
+ 'surrealistic': 882,
+ 'everywhere': 883,
+ 'effects': 884,
+ 'tells': 885,
+ 'wish': 886,
+ 'herein': 887,
+ 'recordings': 888,
+ 'english': 889,
+ 'string': 890,
+ 'forever': 891,
+ 'deeper': 892,
+ 'bell': 893,
+ 'extremely': 894,
+ 'done': 895,
+ 'aside': 896,
+ 'against': 897,
+ 'massage': 898,
+ 'hearing': 899,
+ 'sometimes': 900,
+ 'ability': 901,
+ 'ones': 902,
+ 'future': 903,
+ 'bring': 904,
+ 'cycle': 905,
+ 'featured': 906,
+ 'deal': 907,
+ 'strength': 908,
+ 'feelings': 909,
+ 'force': 910,
+ 'mix': 911,
+ 'duo': 912,
+ 'u': 913,
+ 'aged': 914,
+ 'movin': 915,
+ 'continued': 916,
+ 'amp': 917,
+ 'lost': 918,
+ 'took': 919,
+ 'groove': 920,
+ 'skip': 921,
+ 'heavy': 922,
+ 'era': 923,
+ 'trying': 924,
+ 'name': 925,
+ 'aren': 926,
+ 'surprisingly': 927,
+ 'fine': 928,
+ 'loving': 929,
+ 'precious': 930,
+ 'cut': 931,
+ 'grown': 932,
+ 'foreigner': 933,
+ 'pain': 934,
+ 'story': 935,
+ 'played': 936,
+ 'mean': 937,
+ 'rockin': 938,
+ 'able': 939,
+ 'loved': 940,
+ 'magazine': 941,
+ 'uk': 942,
+ 'barely': 943,
+ 'states': 944,
+ 'million': 945,
+ 'incredible': 946,
+ 'irony': 947,
+ 'retro': 948,
+ 'mastering': 949,
+ 'given': 950,
+ 'stood': 951,
+ 'riff': 952,
+ 'moody': 953,
+ 'boy': 954,
+ 'pure': 955,
+ 'marvelously': 956,
+ 'directly': 957,
+ 'hot': 958,
+ 'hasn': 959,
+ 'weak': 960,
+ 'cuts': 961,
+ 'remain': 962,
+ 'stations': 963,
+ 'perfectly': 964,
+ 'tried': 965,
+ 'edgy': 966,
+ 'drive': 967,
+ 'couldn': 968,
+ 'nirvana': 969,
+ 'generation': 970,
+ 'awesome': 971,
+ 'upon': 972,
+ 'rocker': 973,
+ 'ear': 974,
+ 'stuff': 975,
+ 'drummer': 976,
+ 'guys': 977,
+ 'vocalist': 978,
+ 'edged': 979,
+ 'peaked': 980,
+ 'obsessed': 981,
+ 'panorama': 982,
+ 'remaster': 983,
+ 'rubber': 984,
+ 'bonus': 985,
+ 'using': 986,
+ 'him': 987,
+ 'hearts': 988,
+ 'club': 989,
+ 'lp': 990,
+ 'mono': 991,
+ 'duophonic': 992,
+ 'problems': 993,
+ 'issues': 994,
+ 'mates': 995,
+ 'held': 996,
+ 'amarantine': 997,
+ 'majestic': 998,
+ 'disconcerting': 999,
+ 'decide': 1000,
+ ...}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create input sequences using list of tokens</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>input_sequences <span class="op">=</span> []</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> review <span class="kw">in</span> corpus:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    token_list <span class="op">=</span> tokenizer.texts_to_sequences([review])[<span class="dv">0</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(token_list)):</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        n_gram_sequence <span class="op">=</span> token_list[:i<span class="op">+</span><span class="dv">1</span>]</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        input_sequences.append(n_gram_sequence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we pad sequenced data and define predictors and labels. We use predictors to guess what is the next word in a sequence and labels to correct the model’s predictions.</p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow.keras.utils <span class="im">as</span> ku</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.preprocessing.sequence <span class="im">import</span> pad_sequences</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># pad sequences</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>max_sequence_len <span class="op">=</span> <span class="bu">max</span>([<span class="bu">len</span>(x) <span class="cf">for</span> x <span class="kw">in</span> input_sequences])</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>input_sequences <span class="op">=</span> np.array(pad_sequences(input_sequences, maxlen<span class="op">=</span>max_sequence_len, padding<span class="op">=</span><span class="st">'pre'</span>))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create predictors and label</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>total_words <span class="op">=</span> <span class="bu">len</span>(tokenizer.word_index) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>predictors, label <span class="op">=</span> input_sequences[:,:<span class="op">-</span><span class="dv">1</span>],input_sequences[:,<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>label <span class="op">=</span> ku.to_categorical(label, num_classes<span class="op">=</span>total_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.layers <span class="im">import</span> Embedding, LSTM, Dense, Dropout, Bidirectional</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.models <span class="im">import</span> Sequential</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> regularizers</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Sequential()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>model.add(Embedding(total_words, <span class="dv">240</span>, input_length<span class="op">=</span>max_sequence_len<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>model.add(Bidirectional(LSTM(<span class="dv">150</span>, return_sequences <span class="op">=</span> <span class="va">True</span>)))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>model.add(Dropout(<span class="fl">0.2</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>model.add(LSTM(<span class="dv">100</span>))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>model.add(Dense(total_words<span class="op">/</span><span class="dv">2</span>, activation<span class="op">=</span><span class="st">'relu'</span>, kernel_regularizer<span class="op">=</span>regularizers.l2(<span class="fl">0.01</span>)))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>model.add(Dense(total_words, activation<span class="op">=</span><span class="st">'softmax'</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>, optimizer<span class="op">=</span><span class="st">'adam'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2023-04-27 15:07:39.789574: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:39.790678: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:39.791715: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:39.879652: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis' with dtype int32 and shape [1]
+     [[{{node gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis}}]]
+2023-04-27 15:07:39.910098: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:39.911012: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:39.911751: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:40.043845: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:40.045037: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:40.045803: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> myCallback(tf.keras.callbacks.Callback):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_epoch_end(<span class="va">self</span>, epoch, logs<span class="op">=</span>{}):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(logs.get(<span class="st">'accuracy'</span>)<span class="op">&gt;</span><span class="fl">0.93</span>):</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Reached 93% accuracy so cancelling training!"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.model.stop_training <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>callbacks <span class="op">=</span> myCallback()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> model.fit(predictors, label, epochs<span class="op">=</span><span class="dv">300</span>, verbose<span class="op">=</span><span class="dv">1</span>, callbacks<span class="op">=</span>[callbacks])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 1/300
+114/691 [===&gt;..........................] - ETA: 9:42 - loss: 7.2938 - accuracy: 0.0419</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2023-04-27 15:07:53.792638: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:53.793805: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:53.794667: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:53.885455: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis' with dtype int32 and shape [1]
+     [[{{node gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis}}]]
+2023-04-27 15:07:53.918975: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:53.920028: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:53.920972: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:54.047306: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:54.048460: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:54.049348: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:54.569553: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis' with dtype int32 and shape [1]
+     [[{{node gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis}}]]
+2023-04-27 15:07:54.911371: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:54.912442: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:54.913226: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:55.003242: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis' with dtype int32 and shape [1]
+     [[{{node gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis}}]]
+2023-04-27 15:07:55.035943: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:55.036898: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:55.037732: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:55.163333: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_2_grad/concat/split_2/split_dim' with dtype int32
+     [[{{node gradients/split_2_grad/concat/split_2/split_dim}}]]
+2023-04-27 15:07:55.164616: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_grad/concat/split/split_dim' with dtype int32
+     [[{{node gradients/split_grad/concat/split/split_dim}}]]
+2023-04-27 15:07:55.165428: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/split_1_grad/concat/split_1/split_dim' with dtype int32
+     [[{{node gradients/split_1_grad/concat/split_1/split_dim}}]]
+2023-04-27 15:07:55.606626: I tensorflow/core/common_runtime/executor.cc:1197] [/device:CPU:0] (DEBUG INFO) Executor start aborting (this does not indicate an error and you can ignore this message): INVALID_ARGUMENT: You must feed a value for placeholder tensor 'gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis' with dtype int32 and shape [1]
+     [[{{node gradients/ReverseV2_grad/ReverseV2/ReverseV2/axis}}]]</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>KeyboardInterrupt: </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>seed_text_list <span class="op">=</span> [<span class="st">"i think"</span>, <span class="st">"this was"</span>,<span class="st">"this cd"</span>, <span class="st">"i love"</span>,<span class="st">"what a"</span>]</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>next_words <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_words(seed_text):</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(next_words):</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        token_list <span class="op">=</span> tokenizer.texts_to_sequences([seed_text])[<span class="dv">0</span>]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>        token_list <span class="op">=</span> pad_sequences([token_list], maxlen<span class="op">=</span>max_sequence_len<span class="op">-</span><span class="dv">1</span>, padding<span class="op">=</span><span class="st">'pre'</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>        predicted <span class="op">=</span> model.predict(token_list, verbose<span class="op">=</span><span class="st">"0"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>        classes_x <span class="op">=</span> np.argmax(predicted,axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>        output_word <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> word, index <span class="kw">in</span> tokenizer.word_index.items():</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> index <span class="op">==</span> classes_x:</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>                output_word <span class="op">=</span> word</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>        seed_text <span class="op">+=</span> <span class="st">" "</span> <span class="op">+</span> output_word</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (seed_text <span class="op">+</span> <span class="st">"."</span>).capitalize()</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> seed_text <span class="kw">in</span> seed_text_list:</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Generated text: "</span> <span class="op">+</span> generate_words(seed_text))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

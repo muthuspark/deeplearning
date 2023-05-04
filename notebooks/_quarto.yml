@@ -1,0 +1,30 @@
+project:
+  type: website
+
+website:
+  title: "deeplearning"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: "Basics"
+        contents:
+          - sine_wave_function.ipynb
+          - linear_equation_learning.ipynb
+          - mnist_digit_classification.ipynb
+          - create_text.ipynb
+          - semantic_similarity_bert.ipynb
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+
